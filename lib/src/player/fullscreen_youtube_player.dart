@@ -20,7 +20,6 @@ Future<void> showFullScreenYoutubePlayer({
   List<Widget> bottomActions,
   Widget bufferIndicator,
   Duration controlsTimeOut,
-  Color liveUIColor,
   VoidCallback onReady,
   void Function(YoutubeMetaData) onEnded,
   ProgressBarColors progressColors,
@@ -30,17 +29,16 @@ Future<void> showFullScreenYoutubePlayer({
       context,
       _YoutubePageRoute(
         builder: (context) => _FullScreenYoutubePlayer(
-          controller: controller,
-          actionsPadding: actionsPadding,
-          topActions: topActions,
-          bottomActions: bottomActions,
-          bufferIndicator: bufferIndicator,
-          controlsTimeOut: controlsTimeOut,
-          liveUIColor: liveUIColor,
           onReady: onReady,
           onEnded: onEnded,
-          progressColors: progressColors,
+          topActions: topActions,
+          controller: controller,
           thumbnailUrl: thumbnailUrl,
+          bottomActions: bottomActions,
+          progressColors: progressColors,
+          actionsPadding: actionsPadding,
+          controlsTimeOut: controlsTimeOut,
+          bufferIndicator: bufferIndicator,
         ),
       ),
     );
@@ -64,9 +62,6 @@ class _FullScreenYoutubePlayer extends StatefulWidget {
   /// {@macro youtube_player_flutter.onEnded}
   final void Function(YoutubeMetaData) onEnded;
 
-  /// {@macro youtube_player_flutter.liveUIColor}
-  final Color liveUIColor;
-
   /// {@macro youtube_player_flutter.topActions}
   final List<Widget> topActions;
 
@@ -82,61 +77,58 @@ class _FullScreenYoutubePlayer extends StatefulWidget {
   _FullScreenYoutubePlayer({
     Key key,
     @required this.controller,
-    this.controlsTimeOut = const Duration(seconds: 3),
     this.bufferIndicator,
     this.progressColors,
     this.onReady,
     this.onEnded,
-    this.liveUIColor = Colors.red,
     this.topActions,
     this.bottomActions,
+    this.controlsTimeOut = const Duration(seconds: 3),
     this.actionsPadding = const EdgeInsets.all(8.0),
     this.thumbnailUrl,
   }) : super(key: key);
 
   @override
-  _FullScreenYoutubePlayerState createState() =>
-      _FullScreenYoutubePlayerState();
+  _FullScreenYoutubePlayerState createState() => _FullScreenYoutubePlayerState();
 }
 
 class _FullScreenYoutubePlayerState extends State<_FullScreenYoutubePlayer> {
   @override
-  Widget build(BuildContext context) {
-    return YoutubePlayer(
-      controller: widget.controller,
-      showVideoProgressIndicator: false,
-      actionsPadding: widget.actionsPadding,
-      bottomActions: widget.bottomActions,
-      bufferIndicator: widget.bufferIndicator,
-      controlsTimeOut: widget.controlsTimeOut,
-      liveUIColor: widget.liveUIColor,
-      onReady: widget.onReady,
-      onEnded: widget.onEnded,
-      progressColors: widget.progressColors,
-      thumbnailUrl: widget.thumbnailUrl,
-      topActions: widget.topActions,
-    );
-  }
+  Widget build(BuildContext context) => YoutubePlayer(
+        controller: widget.controller,
+        showVideoProgressIndicator: false,
+        actionsPadding: widget.actionsPadding,
+        bottomActions: widget.bottomActions,
+        bufferIndicator: widget.bufferIndicator,
+        controlsTimeOut: widget.controlsTimeOut,
+        onReady: widget.onReady,
+        onEnded: widget.onEnded,
+        progressColors: widget.progressColors,
+        thumbnailUrl: widget.thumbnailUrl,
+        topActions: widget.topActions,
+      );
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback(
-      (_) => widget.controller.updateValue(
-        widget.controller.value.copyWith(isFullScreen: true),
-      ),
+      (_) => widget.controller.updateValue(widget.controller.value.copyWith(
+        isFullScreen: true,
+      )),
     );
+
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
     ]);
   }
 
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    // TODO cache orientations and return proper values
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SchedulerBinding.instance.addPostFrameCallback(
       (_) => widget.controller.updateValue(
         widget.controller.value.copyWith(isFullScreen: false),
@@ -152,8 +144,11 @@ class _YoutubePageRoute<T> extends MaterialPageRoute<T> {
   }) : super(builder: builder);
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    return child;
-  }
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) =>
+      child;
 }

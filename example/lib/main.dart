@@ -77,7 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
         autoPlay: false,
         disableDragSeek: false,
         loop: false,
-        isLive: false,
         forceHideAnnotation: true,
         forceHD: false,
         enableCaption: true,

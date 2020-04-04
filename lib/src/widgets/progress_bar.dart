@@ -17,15 +17,15 @@ class ProgressBarColors {
   /// Defines color for buffered portion of the [ProgressBar].
   final Color bufferedColor;
 
-  /// Defines color for handle of the [ProgressBar].
-  final Color handleColor;
+  /// Defines color for handle (indicator) of the [ProgressBar].
+  final Color progressIndicatorColor;
 
   /// Creates [ProgressBarColors].
   const ProgressBarColors({
+    this.progressIndicatorColor,
     this.backgroundColor,
-    this.playedColor,
     this.bufferedColor,
-    this.handleColor,
+    this.playedColor,
   });
 }
 
@@ -92,8 +92,7 @@ class _ProgressBarState extends State<ProgressBar> {
     var _totalDuration = _controller.metadata.duration?.inMilliseconds;
     if (mounted && !_totalDuration.isNaN && _totalDuration != 0) {
       setState(() {
-        _playedValue =
-            _controller.value.position.inMilliseconds / _totalDuration;
+        _playedValue = _controller.value.position.inMilliseconds / _totalDuration;
         _bufferedValue = _controller.value.buffered;
       });
     }
@@ -213,13 +212,10 @@ class _ProgressBarPainter extends CustomPainter {
 
     final startPoint = Offset(handleRadius, centerY);
     final endPoint = Offset(size.width - handleRadius, centerY);
-    final progressPoint =
-        Offset(barLength * playedValue + handleRadius, centerY);
-    final secondProgressPoint =
-        Offset(barLength * bufferedValue + handleRadius, centerY);
+    final progressPoint = Offset(barLength * playedValue + handleRadius, centerY);
+    final secondProgressPoint = Offset(barLength * bufferedValue + handleRadius, centerY);
 
-    paint.color =
-        colors?.backgroundColor ?? themeData.accentColor.withOpacity(0.38);
+    paint.color = colors?.backgroundColor ?? themeData.accentColor.withOpacity(0.38);
     canvas.drawLine(startPoint, endPoint, paint);
 
     paint.color = colors?.bufferedColor ?? Colors.white70;
@@ -233,7 +229,7 @@ class _ProgressBarPainter extends CustomPainter {
     handlePaint.color = Colors.transparent;
     canvas.drawCircle(progressPoint, centerY, handlePaint);
 
-    final _handleColor = colors?.handleColor ?? themeData.accentColor;
+    final _handleColor = colors?.progressIndicatorColor ?? themeData.accentColor;
 
     if (touchDown) {
       handlePaint.color = _handleColor.withOpacity(0.4);
