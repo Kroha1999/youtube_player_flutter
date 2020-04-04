@@ -62,15 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isPlayerReady = false;
 
   final List<String> _ids = [
-    'lgkZC_Ss6YE',
+    'jKCj3XuPG8M',
     'gQDByCdjUXw',
     'iLnmTe5Q2Qw',
-    '_WoCV4c6XOE',
-    'KmzdUe0RSJo',
-    '6jZDSSZZxjQ',
-    'p2lYr3vM_1w',
-    '7QUtEmBT_-w',
-    '34_PXCzGw1M',
   ];
 
   @override
@@ -80,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
       initialVideoId: _ids.first,
       flags: YoutubePlayerFlags(
         mute: false,
-        autoPlay: true,
+        autoPlay: false,
         disableDragSeek: false,
         loop: false,
         isLive: false,
@@ -151,8 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           YoutubePlayer(
             controller: _controller,
-            showVideoProgressIndicator: true,
-            progressIndicatorColor: Colors.blueAccent,
             topActions: <Widget>[
               SizedBox(width: 8.0),
               Expanded(
@@ -181,8 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _isPlayerReady = true;
             },
             onEnded: (data) {
-              _controller
-                  .load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
+              _controller.load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
               _showSnackBar('Next Video Started!');
             },
           ),
@@ -252,9 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     IconButton(
                       icon: Icon(
-                        _controller.value.isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow,
+                        _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
                       ),
                       onPressed: _isPlayerReady
                           ? () {
@@ -269,9 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
                       onPressed: _isPlayerReady
                           ? () {
-                              _muted
-                                  ? _controller.unMute()
-                                  : _controller.mute();
+                              _muted ? _controller.unMute() : _controller.mute();
                               setState(() {
                                 _muted = !_muted;
                               });

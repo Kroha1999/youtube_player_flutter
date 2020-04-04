@@ -25,8 +25,7 @@ class PlayPauseButton extends StatefulWidget {
   _PlayPauseButtonState createState() => _PlayPauseButtonState();
 }
 
-class _PlayPauseButtonState extends State<PlayPauseButton>
-    with TickerProviderStateMixin {
+class _PlayPauseButtonState extends State<PlayPauseButton> with TickerProviderStateMixin {
   YoutubePlayerController _controller;
   AnimationController _animController;
 
@@ -63,9 +62,8 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
     super.dispose();
   }
 
-  void _playPauseListener() => _controller.value.isPlaying
-      ? _animController.forward()
-      : _animController.reverse();
+  void _playPauseListener() =>
+      _controller.value.isPlaying ? _animController.forward() : _animController.reverse();
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +79,8 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(50.0),
-            onTap: () => _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play(),
+            onTap: () =>
+                _controller.value.isPlaying ? _controller.pause() : _controller.play(),
             child: AnimatedIcon(
               icon: AnimatedIcons.play_pause,
               progress: _animController.view,

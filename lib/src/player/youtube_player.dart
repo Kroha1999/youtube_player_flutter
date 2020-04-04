@@ -25,20 +25,20 @@ import 'raw_youtube_player.dart';
 ///
 /// ```dart
 /// YoutubePlayer(
-///    context: context,
-///    initialVideoId: "iLnmTe5Q2Qw",
-///    flags: YoutubePlayerFlags(
-///      autoPlay: true,
-///      showVideoProgressIndicator: true,
-///    ),
-///    videoProgressIndicatorColor: Colors.amber,
-///    progressColors: ProgressColors(
-///      playedColor: Colors.amber,
-///      handleColor: Colors.amberAccent,
-///    ),
-///    onPlayerInitialized: (controller) {
-///      _controller = controller..addListener(listener);
-///    },
+/// context: context,
+/// initialVideoId: "iLnmTe5Q2Qw",
+/// flags: YoutubePlayerFlags(
+/// autoPlay: true,
+/// showVideoProgressIndicator: true,
+/// ),
+/// videoProgressIndicatorColor: Colors.amber,
+/// progressColors: ProgressColors(
+/// playedColor: Colors.amber,
+/// handleColor: Colors.amberAccent,
+/// ),
+/// onPlayerInitialized: (controller) {
+/// _controller = controller..addListener(listener);
+/// },
 ///)
 /// ```
 ///
@@ -163,8 +163,7 @@ class YoutubePlayer extends StatefulWidget {
     if (trimWhitespaces) url = url.trim();
 
     for (var exp in [
-      RegExp(
-          r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+      RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
       RegExp(
           r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
       RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
@@ -244,8 +243,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
           bufferIndicator: widget.bufferIndicator,
           controlsTimeOut: widget.controlsTimeOut,
           liveUIColor: widget.liveUIColor,
-          onReady: () =>
-              controller.load(_videoId, startAt: _cachedPosition.inSeconds),
+          onReady: () => controller.load(_videoId, startAt: _cachedPosition.inSeconds),
           progressColors: widget.progressColors,
           thumbnailUrl: widget.thumbnailUrl,
           topActions: widget.topActions,
@@ -280,7 +278,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
           width: widget.width ?? MediaQuery.of(context).size.width,
           child: _buildPlayer(
             errorWidget: Container(
-              color: Colors.black87,
+              color: Colors.green,
               padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,8 +295,8 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                         child: Text(
                           errorString(
                             controller.value.errorCode,
-                            videoId: controller.metadata.videoId ??
-                                controller.initialVideoId,
+                            videoId:
+                                controller.metadata.videoId ?? controller.initialVideoId,
                           ),
                           style: TextStyle(
                             color: Colors.white,
@@ -394,10 +392,10 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
               left: 0,
               right: 0,
               child: AnimatedOpacity(
-                opacity: !controller.flags.hideControls &&
-                        controller.value.isControlsVisible
-                    ? 1
-                    : 0,
+                opacity:
+                    !controller.flags.hideControls && controller.value.isControlsVisible
+                        ? 1
+                        : 0,
                 duration: Duration(milliseconds: 300),
                 child: controller.flags.isLive
                     ? LiveBottomBar(liveUIColor: widget.liveUIColor)
@@ -425,10 +423,10 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
               left: 0,
               right: 0,
               child: AnimatedOpacity(
-                opacity: !controller.flags.hideControls &&
-                        controller.value.isControlsVisible
-                    ? 1
-                    : 0,
+                opacity:
+                    !controller.flags.hideControls && controller.value.isControlsVisible
+                        ? 1
+                        : 0,
                 duration: Duration(milliseconds: 300),
                 child: Padding(
                   padding: widget.actionsPadding,
@@ -440,9 +438,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
             ),
           ],
           if (!controller.flags.hideControls)
-            Center(
-              child: PlayPauseButton(),
-            ),
+            Center(child: PlayPauseButton(bufferIndicator: widget.bufferIndicator)),
           if (controller.value.hasError) errorWidget,
         ],
       ),

@@ -40,7 +40,15 @@ class _VideoListState extends State<VideoList> {
           return YoutubePlayer(
             key: ObjectKey(_controllers[index]),
             controller: _controllers[index],
+            progressColors: ProgressBarColors(
+              backgroundColor: Colors.red,
+              bufferedColor: Colors.red,
+              handleColor: Colors.red,
+              playedColor: Colors.red,
+            ),
+            topActions: <Widget>[IconButton(icon: Icon(Icons.add_to_queue))],
             actionsPadding: EdgeInsets.only(left: 16.0),
+            progressIndicatorColor: Colors.red,
             bottomActions: [
               CurrentPosition(),
               SizedBox(width: 10.0),
@@ -51,7 +59,7 @@ class _VideoListState extends State<VideoList> {
             ],
           );
         },
-        itemCount: _controllers.length,
+        itemCount: 1,
         separatorBuilder: (context, _) => SizedBox(height: 10.0),
       ),
     );

@@ -55,11 +55,10 @@ class _LiveBottomBarState extends State<LiveBottomBar> {
   void listener() {
     if (mounted) {
       setState(() {
-        _currentSliderPosition =
-            _controller.metadata.duration.inMilliseconds == 0
-                ? 0
-                : _controller.value.position.inMilliseconds /
-                    _controller.metadata.duration.inMilliseconds;
+        _currentSliderPosition = _controller.metadata.duration.inMilliseconds == 0
+            ? 0
+            : _controller.value.position.inMilliseconds /
+                _controller.metadata.duration.inMilliseconds;
       });
     }
   }
@@ -71,9 +70,7 @@ class _LiveBottomBarState extends State<LiveBottomBar> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(
-            width: 14.0,
-          ),
+          SizedBox(width: 14.0),
           CurrentPosition(),
           Expanded(
             child: Padding(
@@ -83,17 +80,14 @@ class _LiveBottomBarState extends State<LiveBottomBar> {
                   _controller.seekTo(
                     Duration(
                       milliseconds:
-                          (_controller.metadata.duration.inMilliseconds * value)
-                              .round(),
+                          (_controller.metadata.duration.inMilliseconds * value).round(),
                     ),
                   );
                 },
                 activeColor: widget.liveUIColor,
                 inactiveColor: Colors.transparent,
               ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 8.0,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
             ),
           ),
           InkWell(
@@ -103,16 +97,14 @@ class _LiveBottomBarState extends State<LiveBottomBar> {
               child: Text(
                 ' LIVE ',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 12.0,
+                  color: Colors.white,
                   fontWeight: FontWeight.w300,
                 ),
               ),
             ),
           ),
-          FullScreenButton(
-            controller: _controller,
-          ),
+          FullScreenButton(controller: _controller),
         ],
       ),
     );
