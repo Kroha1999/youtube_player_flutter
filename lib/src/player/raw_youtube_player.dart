@@ -34,13 +34,17 @@ class RawYoutubePlayer extends StatefulWidget {
   _RawYoutubePlayerState createState() => _RawYoutubePlayerState();
 }
 
-class _RawYoutubePlayerState extends State<RawYoutubePlayer>
-    with WidgetsBindingObserver {
-  final Completer<WebViewController> _webController =
-      Completer<WebViewController>();
+class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBindingObserver {
+  final Completer<WebViewController> _webController = Completer<WebViewController>();
   YoutubePlayerController controller;
   PlayerState _cachedPlayerState;
   bool _isPlayerReady = false;
+
+  String boolean(bool value) => value ? "'1'" : "'0'";
+
+  String get userAgent => controller.flags.forceHD
+      ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
+      : null;
 
   @override
   void initState() {
@@ -58,8 +62,7 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        if (_cachedPlayerState != null &&
-            _cachedPlayerState == PlayerState.playing) {
+        if (_cachedPlayerState != null && _cachedPlayerState == PlayerState.playing) {
           controller?.play();
         }
         break;
@@ -76,166 +79,138 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer>
   @override
   Widget build(BuildContext context) {
     controller = YoutubePlayerController.of(context);
-    return IgnorePointer(
-      ignoring: true,
-      child: WebView(
-        key: widget.key,
-        userAgent: userAgent,
-        initialData: WebData(
-          data: player,
-          baseUrl: 'https://www.youtube.com',
-          encoding: 'utf-8',
-          mimeType: 'text/html',
-        ),
-        javascriptMode: JavascriptMode.unrestricted,
-        initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
-        javascriptChannels: {
-          JavascriptChannel(
-            name: 'Ready',
-            onMessageReceived: (JavascriptMessage message) {
-              _isPlayerReady = true;
-            },
-          ),
-          JavascriptChannel(
-            name: 'StateChange',
-            onMessageReceived: (JavascriptMessage message) {
-              switch (message.message) {
-                case '-1':
-                  controller.updateValue(
-                    controller.value.copyWith(
-                      playerState: PlayerState.unStarted,
-                      isLoaded: true,
-                    ),
-                  );
-                  break;
-                case '0':
-                  if (widget.onEnded != null) {
-                    widget.onEnded(controller.metadata);
-                  }
-                  controller.updateValue(
-                    controller.value.copyWith(
-                      playerState: PlayerState.ended,
-                    ),
-                  );
-                  break;
-                case '1':
-                  controller.updateValue(
-                    controller.value.copyWith(
-                      playerState: PlayerState.playing,
-                      isPlaying: true,
-                      hasPlayed: true,
-                      errorCode: 0,
-                    ),
-                  );
-                  break;
-                case '2':
-                  controller.updateValue(
-                    controller.value.copyWith(
-                      playerState: PlayerState.paused,
-                      isPlaying: false,
-                    ),
-                  );
-                  break;
-                case '3':
-                  controller.updateValue(
-                    controller.value.copyWith(
-                      playerState: PlayerState.buffering,
-                    ),
-                  );
-                  break;
-                case '5':
-                  controller.updateValue(
-                    controller.value.copyWith(
-                      playerState: PlayerState.cued,
-                    ),
-                  );
-                  break;
-                default:
-                  throw Exception("Invalid player state obtained.");
-              }
-            },
-          ),
-          JavascriptChannel(
-            name: 'PlaybackQualityChange',
-            onMessageReceived: (JavascriptMessage message) {
-              controller.updateValue(
-                controller.value.copyWith(
-                  playbackQuality: message.message,
-                ),
-              );
-            },
-          ),
-          JavascriptChannel(
-            name: 'PlaybackRateChange',
-            onMessageReceived: (JavascriptMessage message) {
-              controller.updateValue(
-                controller.value.copyWith(
-                  playbackRate: double.tryParse(message.message) ?? 1.0,
-                ),
-              );
-            },
-          ),
-          JavascriptChannel(
-            name: 'Errors',
-            onMessageReceived: (JavascriptMessage message) {
-              controller.updateValue(
-                controller.value
-                    .copyWith(errorCode: int.tryParse(message.message) ?? 0),
-              );
-            },
-          ),
-          JavascriptChannel(
-            name: 'VideoData',
-            onMessageReceived: (JavascriptMessage message) {
-              controller.updateValue(
-                controller.value.copyWith(
-                  metaData: YoutubeMetaData.fromRawData(message.message),
-                ),
-              );
-            },
-          ),
-          JavascriptChannel(
-            name: 'CurrentTime',
-            onMessageReceived: (JavascriptMessage message) {
-              var position = (double.tryParse(message.message) ?? 0) * 1000;
-              controller.updateValue(
-                controller.value.copyWith(
-                  position: Duration(milliseconds: position.floor()),
-                ),
-              );
-            },
-          ),
-          JavascriptChannel(
-            name: 'LoadedFraction',
-            onMessageReceived: (JavascriptMessage message) {
-              controller.updateValue(
-                controller.value.copyWith(
-                  buffered: double.tryParse(message.message) ?? 0,
-                ),
-              );
-            },
-          ),
-        },
-        onWebViewCreated: (webController) {
-          _webController.complete(webController);
-          _webController.future.then(
-            (webViewController) {
-              controller.updateValue(
-                controller.value.copyWith(webViewController: webViewController),
-              );
-            },
-          );
-        },
-        onPageFinished: (_) {
-          if (_isPlayerReady) {
-            controller.updateValue(
-              controller.value.copyWith(isReady: true),
-            );
-          } else {
-            controller.reload();
-          }
-        },
+    return WebView(
+      key: widget.key,
+      userAgent: userAgent,
+      gestureRecognizers: {},
+      gestureNavigationEnabled: false,
+      initialData: WebData(
+        data: player,
+        baseUrl: 'https://www.youtube.com',
+        encoding: 'utf-8',
+        mimeType: 'text/html',
       ),
+      javascriptMode: JavascriptMode.unrestricted,
+      initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
+      javascriptChannels: {
+        JavascriptChannel(
+          name: 'Ready',
+          onMessageReceived: (JavascriptMessage message) => _isPlayerReady = true,
+        ),
+        JavascriptChannel(
+          name: 'StateChange',
+          onMessageReceived: (JavascriptMessage message) {
+            switch (message.message) {
+              case '-1':
+                controller.updateValue(
+                  controller.value.copyWith(
+                    playerState: PlayerState.unStarted,
+                    isLoaded: true,
+                  ),
+                );
+                break;
+              case '0':
+                if (widget.onEnded != null) {
+                  widget.onEnded(controller.metadata);
+                }
+                controller.updateValue(controller.value.copyWith(
+                  playerState: PlayerState.ended,
+                ));
+                break;
+              case '1':
+                controller.updateValue(
+                  controller.value.copyWith(
+                    playerState: PlayerState.playing,
+                    isPlaying: true,
+                    hasPlayed: true,
+                    errorCode: 0,
+                  ),
+                );
+                break;
+              case '2':
+                controller.updateValue(controller.value.copyWith(
+                  playerState: PlayerState.paused,
+                  isPlaying: false,
+                ));
+                break;
+              case '3':
+                controller.updateValue(
+                  controller.value.copyWith(playerState: PlayerState.buffering),
+                );
+                break;
+              case '5':
+                controller.updateValue(
+                  controller.value.copyWith(playerState: PlayerState.cued),
+                );
+                break;
+              default:
+                throw Exception("Invalid player state obtained.");
+            }
+          },
+        ),
+        JavascriptChannel(
+          name: 'PlaybackQualityChange',
+          onMessageReceived: (JavascriptMessage message) {
+            controller.updateValue(controller.value.copyWith(
+              playbackQuality: message.message,
+            ));
+          },
+        ),
+        JavascriptChannel(
+          name: 'PlaybackRateChange',
+          onMessageReceived: (JavascriptMessage message) {
+            controller.updateValue(controller.value.copyWith(
+              playbackRate: double.tryParse(message.message) ?? 1.0,
+            ));
+          },
+        ),
+        JavascriptChannel(
+          name: 'Errors',
+          onMessageReceived: (JavascriptMessage message) {
+            controller.updateValue(
+              controller.value.copyWith(errorCode: int.tryParse(message.message) ?? 0),
+            );
+          },
+        ),
+        JavascriptChannel(
+          name: 'VideoData',
+          onMessageReceived: (JavascriptMessage message) {
+            controller.updateValue(controller.value.copyWith(
+              metaData: YoutubeMetaData.fromRawData(message.message),
+            ));
+          },
+        ),
+        JavascriptChannel(
+          name: 'CurrentTime',
+          onMessageReceived: (JavascriptMessage message) {
+            var position = (double.tryParse(message.message) ?? 0) * 1000;
+            controller.updateValue(controller.value.copyWith(
+              position: Duration(milliseconds: position.floor()),
+            ));
+          },
+        ),
+        JavascriptChannel(
+          name: 'LoadedFraction',
+          onMessageReceived: (JavascriptMessage message) {
+            controller.updateValue(controller.value.copyWith(
+              buffered: double.tryParse(message.message) ?? 0,
+            ));
+          },
+        ),
+      },
+      onWebViewCreated: (webController) {
+        _webController.complete(webController);
+        _webController.future.then(
+          (webViewController) => controller.updateValue(controller.value.copyWith(
+            webViewController: webViewController,
+          )),
+        );
+      },
+      onPageFinished: (_) {
+        _isPlayerReady
+            ? controller.updateValue(controller.value.copyWith(isReady: true))
+            : controller.reload();
+      },
     );
   }
 
@@ -251,13 +226,20 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer>
                 padding: 0;
                 background-color: #000000;
                 overflow: hidden;
-                position: fixed;
     ''';
-    if (!Platform.isIOS && controller.flags.forceHideAnnotation) {
+    if (Platform.isAndroid && controller.flags.forceHideAnnotation) {
       _player += '''
+                position: fixed;
                 height: 1000%;
                 width: 1000%;
                 transform: scale(0.1);
+                transform-origin: left top;
+      ''';
+    } else if (Platform.isIOS && controller.flags.forceHideAnnotation) {
+      _player += '''
+                height: 500%;
+                width: 500%;
+                transform: scale(0.2);
                 transform-origin: left top;
       ''';
     } else {
@@ -294,10 +276,10 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer>
                         'rel': 0,
                         'showinfo': 0,
                         'iv_load_policy': 3,
-                        'modestbranding': 1,
-                        'cc_load_policy': ${boolean(value: controller.flags.enableCaption)},
+                        'modestbranding': 0,
+                        'cc_load_policy': ${boolean(controller.flags.enableCaption)},
                         'cc_lang_pref': '${controller.flags.captionLanguage}',
-                        'autoplay': ${boolean(value: controller.flags.autoPlay)}
+                        'autoplay': ${boolean(controller.flags.autoPlay)}
                     },
                     events: {
                         onReady: function(event) { Ready.postMessage("Ready"); },
@@ -405,10 +387,4 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer>
     ''';
     return _player;
   }
-
-  String boolean({@required bool value}) => value ? "'1'" : "'0'";
-
-  String get userAgent => controller.flags.forceHD
-      ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
-      : null;
 }

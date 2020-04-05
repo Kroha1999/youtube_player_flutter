@@ -26,7 +26,7 @@ class _VideoListState extends State<VideoList> {
             autoPlay: false,
             hideThumbnail: true,
             enableCaption: false,
-            forceHideAnnotation: true,
+            forceHideAnnotation: false,
           ),
         ),
       )
@@ -51,7 +51,6 @@ class _VideoListState extends State<VideoList> {
             ),
             width: 100,
             showVideoProgressIndicator: true,
-            topActions: <Widget>[IconButton(icon: Icon(Icons.add_to_queue))],
             actionsPadding: EdgeInsets.only(left: 16.0),
             progressIndicatorColor: Colors.red,
             // bottomActions: [

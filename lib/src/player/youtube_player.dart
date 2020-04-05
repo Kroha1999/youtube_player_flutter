@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:webview_media/webview_flutter.dart';
 
 import '../enums/thumbnail_quality.dart';
 import '../utils/errors.dart';

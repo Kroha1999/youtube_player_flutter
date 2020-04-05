@@ -27,7 +27,7 @@ class YoutubePlayerDemoApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           color: Colors.blueAccent,
           textTheme: TextTheme(
-            title: TextStyle(
+            headline6: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w300,
               fontSize: 20.0,
@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         autoPlay: false,
         disableDragSeek: false,
         loop: false,
-        forceHideAnnotation: true,
+        forceHideAnnotation: false,
         forceHD: false,
         enableCaption: true,
       ),

@@ -105,12 +105,10 @@ class _TouchShutterState extends State<TouchShutter> {
               );
               delta = details.globalPosition.dx - dragStartPos;
               seekToPosition =
-                  (_controller.value.position.inMilliseconds + delta * 1000)
-                      .round();
+                  (_controller.value.position.inMilliseconds + delta * 1000).round();
               setState(() {
                 seekDuration = (delta < 0 ? "- " : "+ ") +
-                    durationFormatter(
-                        (delta < 0 ? -1 : 1) * (delta * 1000).round());
+                    durationFormatter((delta < 0 ? -1 : 1) * (delta * 1000).round());
                 if (seekToPosition < 0) seekToPosition = 0;
                 seekPosition = durationFormatter(seekToPosition);
               });
