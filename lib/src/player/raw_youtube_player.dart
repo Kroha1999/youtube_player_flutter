@@ -229,7 +229,6 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBinding
     ''';
     if (Platform.isAndroid && controller.flags.forceHideAnnotation) {
       _player += '''
-                position: fixed;
                 height: 1000%;
                 width: 1000%;
                 transform: scale(0.1);
