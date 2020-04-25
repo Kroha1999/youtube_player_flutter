@@ -1,3 +1,11 @@
+/*
+* // 
+* // video_list.dart
+* // 
+* // Created by Bohdan Krokhmaliuk on 2020-04-26
+* // Copyright (c) 2020 Kroha. All rights reserved.
+* // 
+*/
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -26,7 +34,7 @@ class _VideoListState extends State<VideoList> {
             autoPlay: false,
             hideThumbnail: true,
             enableCaption: false,
-            forceHideAnnotation: false,
+            forceHideAnnotation: true,
           ),
         ),
       )

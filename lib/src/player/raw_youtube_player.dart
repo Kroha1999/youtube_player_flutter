@@ -21,6 +21,9 @@ class RawYoutubePlayer extends StatefulWidget {
   /// Sets [Key] as an identification to underlying web view associated to the player.
   final Key key;
 
+  /// Controlls this youtube player;
+  final YoutubePlayerController controller;
+
   /// {@macro youtube_player_flutter.onEnded}
   final void Function(YoutubeMetaData metaData) onEnded;
 
@@ -28,6 +31,7 @@ class RawYoutubePlayer extends StatefulWidget {
   RawYoutubePlayer({
     this.key,
     this.onEnded,
+    this.controller,
   });
 
   @override
@@ -40,7 +44,7 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBinding
   PlayerState _cachedPlayerState;
   bool _isPlayerReady = false;
 
-  String boolean(bool value) => value ? "'1'" : "'0'";
+  String boolean(final bool value) => value ? "'1'" : "'0'";
 
   String get userAgent => controller.flags.forceHD
       ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
@@ -49,12 +53,13 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBinding
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+
+    // WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    // WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -236,9 +241,9 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer> with WidgetsBinding
       ''';
     } else if (Platform.isIOS && controller.flags.forceHideAnnotation) {
       _player += '''
-                height: 500%;
-                width: 500%;
-                transform: scale(0.2);
+                height: 600%;
+                width: 600%;
+                transform: scale(0.167);
                 transform-origin: left top;
       ''';
     } else {
