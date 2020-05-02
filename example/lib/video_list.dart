@@ -34,7 +34,7 @@ class _VideoListState extends State<VideoList> {
             autoPlay: false,
             hideThumbnail: true,
             enableCaption: false,
-            forceHideAnnotation: true,
+            forceHideAnnotation: false,
           ),
         ),
       )
