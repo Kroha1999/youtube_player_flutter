@@ -1,3 +1,11 @@
+/*
+* // 
+* // video_list.dart
+* // 
+* // Created by Bohdan Krokhmaliuk on 2020-04-26
+* // Copyright (c) 2020 Kroha. All rights reserved.
+* // 
+*/
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -24,6 +32,9 @@ class _VideoListState extends State<VideoList> {
           initialVideoId: videoId,
           flags: YoutubePlayerFlags(
             autoPlay: false,
+            hideThumbnail: true,
+            enableCaption: false,
+            forceHideAnnotation: false,
           ),
         ),
       )
@@ -40,18 +51,27 @@ class _VideoListState extends State<VideoList> {
           return YoutubePlayer(
             key: ObjectKey(_controllers[index]),
             controller: _controllers[index],
+            progressColors: ProgressBarColors(
+              progressIndicatorColor: Colors.blue,
+              backgroundColor: Colors.red,
+              bufferedColor: Colors.green,
+              playedColor: Colors.red,
+            ),
+            width: 100,
+            showVideoProgressIndicator: true,
             actionsPadding: EdgeInsets.only(left: 16.0),
-            bottomActions: [
-              CurrentPosition(),
-              SizedBox(width: 10.0),
-              ProgressBar(isExpanded: true),
-              SizedBox(width: 10.0),
-              RemainingDuration(),
-              FullScreenButton(),
-            ],
+            progressIndicatorColor: Colors.red,
+            // bottomActions: [
+            //   CurrentPosition(),
+            //   SizedBox(width: 10.0),
+            //   ProgressBar(isExpanded: true),
+            //   SizedBox(width: 10.0),
+            //   RemainingDuration(),
+            //   FullScreenButton(),
+            // ],
           );
         },
-        itemCount: _controllers.length,
+        itemCount: 1,
         separatorBuilder: (context, _) => SizedBox(height: 10.0),
       ),
     );

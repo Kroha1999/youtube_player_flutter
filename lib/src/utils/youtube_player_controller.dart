@@ -169,9 +169,8 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
         super(YoutubePlayerValue());
 
   /// Finds [YoutubePlayerController] in the provided context.
-  factory YoutubePlayerController.of(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()
-      ?.controller;
+  factory YoutubePlayerController.of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()?.controller;
 
   _callMethod(String methodString) {
     if (value.isReady) {
@@ -277,8 +276,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   void setPlaybackRate(double rate) => _callMethod('setPlaybackRate($rate)');
 
   /// Toggles the player's full screen mode.
-  void toggleFullScreenMode() =>
-      updateValue(value.copyWith(toggleFullScreen: true));
+  void toggleFullScreenMode() => updateValue(value.copyWith(toggleFullScreen: true));
 
   /// MetaData for the currently loaded or cued video.
   YoutubeMetaData get metadata => value.metaData;
